@@ -1,20 +1,27 @@
-# Use official PHP image with Apache and required extensions
-FROM php:8.1-apache
+FROM php:8.2-apache
 
-# Install PHP extensions required by Yii2
-RUN docker-php-ext-install pdo pdo_mysql mysqli
+# Install system dependencies needed for PHP extensions
+RUN apt-get update && apt-get install -y \
+    libsqlite3-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libonig-dev \
+    libzip-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    default-mysql-client \
+    && docker-php-ext-install pdo pdo_mysql pdo_sqlite \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Copy app files
+COPY . /var/www/html/
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy Yii2 app files to container
-COPY . /var/www/html
+# Expose port
+EXPOSE 8000
 
-# Set file permissions (optional, recommended)
-RUN chown -R www-data:www-data /var/www/html
-
-# Expose port 80
-EXPOSE 80
+# Command to start built-in PHP server
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "web"]
