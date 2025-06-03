@@ -1,7 +1,4 @@
 .git
-vendor
-node_modules
-tests
 README.md
 .dockerignore
 .gitignore
