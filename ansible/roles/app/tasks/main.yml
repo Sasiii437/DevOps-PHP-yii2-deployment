@@ -1,0 +1,9 @@
+- name: Clone your Yii2 repo
+  git:
+    repo: 'https://github.com/Sasiii437/DevOps-PHP-yii2-deployment.git'
+    dest: /home/ubuntu/DevOps-PHP-yii2-deployment
+
+- name: Deploy Docker stack
+  shell: |
+    cd /home/ubuntu/DevOps-PHP-yii2-deployment
+    docker stack deploy --compose-file docker-compose.yml mystack
